@@ -10,3 +10,8 @@ dist
 !.vscode/extensions.json
 .idea
 .DS_Store
+
+# Environment files (database passwords, secrets)
+.env
+.env.*
+!.env.example
