@@ -1,8 +1,10 @@
 import { usePageMeta } from "@/lib/use-page-meta";
 import { Link } from "react-router-dom";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, CheckCircle2 } from "lucide-react";
 import heroImage from "@/assets/clinic/thumbnail-6.jpeg";
 import careImage from "@/assets/clinic/thumbnail-4.jpeg";
+import doctorImage from "@/assets/clinic/thumbnail-5.jpeg";
+import childImage from "@/assets/clinic/thumbnail-7.jpeg";
 import { ButtonLink } from "@/components/Button";
 import { CtaBand, Eyebrow, MixedHeading } from "@/components/PageParts";
 import { services } from "@/lib/clinic-data";
@@ -17,9 +19,17 @@ const pageMeta = [
 export default function HomePage() {
   usePageMeta(pageMeta);
   return <>
-  <section className="home-hero shell">
+  <section className="home-hero">
+   <div className="hero-orbs" aria-hidden="true">
+    <div className="orb orb-pink"><img src={doctorImage} alt=""/></div>
+    <div className="orb orb-green"><img src={childImage} alt=""/></div>
+    <div className="orb orb-orange"/>
+    <div className="orb orb-indigo"/>
+    <div className="orb orb-petal"><img src={heroImage} alt=""/></div>
+   </div>
    <div className="hero-copy"><Eyebrow>Healthcare, centered on you</Eyebrow><MixedHeading as="h1" regular="Your health." strong="Our priority."/><p>Premium healthcare powered by innovation, compassion and clinical excellence across Kenya.</p><div className="hero-actions"><ButtonLink to="/appointment" variant="accent">Book appointment <ArrowRight size={16}/></ButtonLink><ButtonLink to="/services" variant="outline">Explore services</ButtonLink></div></div>
-   <div className="hero-visual"><img src={heroImage} alt="A Sharks Clinic doctor consulting with a family"/><div className="hero-stat"><strong>10K+</strong><span>patients cared for</span></div></div>
+   <div className="hero-float hero-stat"><strong>10K+</strong><span>patients cared for</span></div>
+   <div className="hero-float hero-booking"><CheckCircle2 size={22}/><div><b>Appointment confirmed</b><span>Dr. Jane Smith · Mon</span></div></div>
   </section>
 
     <section className="section shell"><div className="section-heading"><div><Eyebrow>Our services</Eyebrow><MixedHeading regular="Care for every stage." strong="Expertise for every need."/></div><p>Comprehensive healthcare solutions delivered by experienced medical professionals.</p></div><div className="service-grid">{services.slice(0, 3).map(({ title, category, description, Icon }) => <article className="service-card" key={title}><div className="card-top"><Icon size={28}/><span className="badge">{category}</span></div><h3>{title}</h3><p>{description}</p><Link to="/services">Explore care <ArrowRight size={15}/></Link></article>)}</div></section>
