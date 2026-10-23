@@ -3,7 +3,6 @@ import { useEffect } from "react";
 
 const revealSelectors = [
   ".page-intro > *",
-  ".trust-item",
   ".section-heading > *",
   ".service-card",
   ".split-image",
@@ -28,7 +27,7 @@ const revealSelectors = [
   ".footer-bottom > *",
 ].join(",");
 
-const entranceSelectors = [".hero-copy > *", ".hero-visual"].join(",");
+const entranceSelectors = [".hero-copy > *"].join(",");
 
 export function ScrollMotion() {
   const { pathname } = useLocation();
