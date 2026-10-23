@@ -152,7 +152,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .hero-float span { font-size: var(--text-caption); color: var(--muted-foreground); }
 .hero-float b { display: block; font-size: var(--text-body-sm); font-weight: 500; }
 .hero-float svg { color: var(--color-forest); flex: none; }
-.hero-stat { flex-direction: column; align-items: flex-start; gap: 6px; right: 5%; bottom: 150px; }
+.hero-stat { flex-direction: column; align-items: flex-start; gap: 6px; right: 5%; bottom: 60px; }
 .hero-booking { left: 5%; bottom: 150px; }
 
 /* ---------- Sections ---------- */
