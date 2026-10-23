@@ -131,7 +131,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .mixed-heading strong { font-weight: 400; font-style: italic; }
 
 /* ---------- Hero: centred headline, circular portrait frames bleeding off the edges ---------- */
-.home-hero { position: relative; overflow: clip; margin-top: calc(var(--header-h) * -1); min-height: 780px; display: grid; place-items: center; padding: calc(var(--header-h) + 72px) 24px 120px; }
+.home-hero { position: relative; overflow: clip; margin-top: calc(var(--header-h) * -1); min-height: 600px; display: grid; place-items: center; padding: calc(var(--header-h) + 16px) 24px 64px; }
 .hero-orbs { position: absolute; inset: 0; pointer-events: none; }
 .orb { --size: clamp(170px, 27vw, 400px); position: absolute; width: var(--size); height: var(--size); border-radius: 50%; }
 .orb img { position: absolute; width: 76%; height: 76%; border-radius: 50%; object-fit: cover; }
