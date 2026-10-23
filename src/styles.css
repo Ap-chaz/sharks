@@ -643,7 +643,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 /* ---------- Tablet hero fix (561px–900px) ---------- */
 @media (min-width: 561px) and (max-width: 900px) {
-  .home-hero { min-height: 760px; padding: calc(var(--header-h) + 170px) 32px 210px; }
+  .home-hero { min-height: 100svh; padding: calc(var(--header-h) + 170px) 32px 210px; }
 
   /* top circles: smaller, kept clear of the headline */
   .orb-pink   { --size: 170px; top: 95px; left: calc(var(--size) * -.35); }
