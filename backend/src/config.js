@@ -9,6 +9,8 @@ const schema = z.object({
   DB_NAME: z.string().min(1).default('sharks_clinic'),
   DB_USER: z.string().default(''),
   DB_PASSWORD: z.string().default(''),
+  MIGRATE_DB_USER: z.string().default(''),
+  MIGRATE_DB_PASSWORD: z.string().default(''),
   SESSION_SECRET: z.string().default(''),
   FRONTEND_ORIGIN: z.string().url().default('http://localhost:5173'),
 });
