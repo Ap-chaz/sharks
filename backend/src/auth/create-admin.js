@@ -2,20 +2,7 @@ import readline from 'node:readline/promises';
 import { stdin, stdout } from 'node:process';
 import { pool } from '../db/pool.js';
 import { hashPassword } from './password.js';
-
-function askHidden(rl, question) {
-  return new Promise((resolve) => {
-    const original = rl._writeToOutput;
-    rl._writeToOutput = function (s) {
-      if (s.includes(question)) original.call(rl, s);
-    };
-    rl.question(question).then((answer) => {
-      rl._writeToOutput = original;
-      stdout.write('\n');
-      resolve(answer);
-    });
-  });
-}
+import { askHidden } from './hidden-input.js';
 
 async function main() {
   const [existing] = await pool.query(
@@ -35,8 +22,11 @@ async function main() {
     if (fullName.length < 2 || fullName.length > 120) {
       throw new Error('Invalid full name.');
     }
-    const password = await askHidden(rl, 'Password (12+ chars, hidden): ');
-    const again = await askHidden(rl, 'Repeat password: ');
+    const password = await askHidden('Password (12+ chars, hidden): ');
+    if (password.length < 12) {
+      throw new Error('Password must be at least 12 characters.');
+    }
+    const again = await askHidden('Repeat password: ');
     if (password !== again) {
       throw new Error('Passwords do not match.');
     }
