@@ -15,7 +15,7 @@ let recCookie;
 let adminId;
 
 async function cleanup() {
-  await pool.query("DELETE FROM audit_logs WHERE username LIKE 'zz_test_%' OR entity_type = 'user' AND details LIKE '%zz_test_%'");
+  await pool.query("DELETE FROM audit_logs WHERE username LIKE 'zz_test_%'");
   await pool.query("DELETE FROM users WHERE username LIKE 'zz_test_%'");
 }
 
@@ -31,17 +31,13 @@ async function makeUser(username, role) {
 
 beforeAll(async () => {
   await cleanup();
-  const [admins] = await pool.query(
-    "SELECT u.id FROM users u JOIN roles r ON r.id = u.role_id WHERE r.name = 'administrator' LIMIT 1"
-  );
-  adminId = admins[0].id;
+  adminId = await makeUser('zz_test_staff_admin', 'administrator');
   adminCookie = COOKIE_NAME + '=' + (await createSession(adminId, '127.0.0.1', 'vitest'));
   const recId = await makeUser('zz_test_staff_rec', 'receptionist');
   recCookie = COOKIE_NAME + '=' + (await createSession(recId, '127.0.0.1', 'vitest'));
 });
 
 afterAll(async () => {
-  await pool.query('DELETE FROM sessions WHERE user_id = ? AND user_agent = ?', [adminId, 'vitest']);
   await cleanup();
   await pool.end();
 });
@@ -99,7 +95,7 @@ describe('staff routes', () => {
     expect(badRole.status).toBe(400);
   });
 
-  it('never allows changing the administrator account', async () => {
+  it('never allows changing an administrator account', async () => {
     const res = await request(app).patch('/api/staff/' + adminId).set('Origin', ORIGIN).set('Cookie', adminCookie)
       .send({ isActive: false });
     expect(res.status).toBe(403);
