@@ -4,6 +4,7 @@ import { pool } from '../db/pool.js';
 import { verifyPassword } from '../auth/password.js';
 import { createSession, findSession, deleteSession, SESSION_HOURS } from '../auth/sessions.js';
 import { isLockedOut, recordAttempt } from '../auth/attempts.js';
+import { logAudit } from '../auth/audit.js';
 import { config } from '../config.js';
 
 export const COOKIE_NAME = 'sharks_sid';
@@ -13,7 +14,7 @@ const loginSchema = z.object({
   password: z.string().min(1).max(200),
 });
 
-// Valid argon2id hash of a random string. Used so unknown usernames cost the same time as known ones.
+// Valid-format argon2id hash, so unknown usernames cost the same time as known ones (verified: ~111ms vs ~118ms).
 const DUMMY_HASH =
   '$argon2id$v=19$m=65536,t=3,p=4$c29tZXNhbHRzb21lc2FsdA$0000000000000000000000000000000000000000000';
 
@@ -35,6 +36,7 @@ authRouter.post('/login', async (req, res, next) => {
     const ip = req.ip;
 
     if (await isLockedOut(username, ip)) {
+      await logAudit({ username, action: 'login_locked', ip });
       return res.status(429).json({ error: 'Too many attempts. Try again later.' });
     }
 
@@ -47,12 +49,14 @@ authRouter.post('/login', async (req, res, next) => {
 
     if (!user || !user.is_active || !ok) {
       await recordAttempt(username, ip, false);
+      await logAudit({ username, action: 'login_failed', ip });
       return res.status(401).json({ error: 'Invalid username or password' });
     }
 
     await recordAttempt(username, ip, true);
     const sid = await createSession(user.id, ip, req.get('user-agent'));
     await pool.query('UPDATE users SET last_login_at = UTC_TIMESTAMP() WHERE id = ?', [user.id]);
+    await logAudit({ userId: user.id, username, action: 'login_success', ip });
     res.cookie(COOKIE_NAME, sid, cookieOptions);
     res.json({ ok: true });
   } catch (err) {
@@ -74,7 +78,11 @@ authRouter.get('/me', async (req, res, next) => {
 
 authRouter.post('/logout', async (req, res, next) => {
   try {
+    const session = await findSession(req.cookies?.[COOKIE_NAME]);
     await deleteSession(req.cookies?.[COOKIE_NAME]);
+    if (session) {
+      await logAudit({ userId: session.user_id, username: session.username, action: 'logout', ip: req.ip });
+    }
     res.clearCookie(COOKIE_NAME, { path: '/' });
     res.json({ ok: true });
   } catch (err) {
