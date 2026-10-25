@@ -8,6 +8,7 @@ import { requestLogger } from './middleware/requestLogger.js';
 import { notFound, errorHandler } from './middleware/errors.js';
 import { authRouter } from './routes/auth.js';
 import { staffRouter } from './routes/staff.js';
+import { patientsRouter } from './routes/patients.js';
 
 function requireSameOrigin(req, res, next) {
   const unsafe = !['GET', 'HEAD', 'OPTIONS'].includes(req.method);
@@ -45,6 +46,7 @@ export function createApp() {
 
   app.use('/api/auth', authRouter);
   app.use('/api/staff', staffRouter);
+  app.use('/api/patients', patientsRouter);
 
   app.use(notFound);
   app.use(errorHandler);
