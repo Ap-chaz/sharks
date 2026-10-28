@@ -11,9 +11,15 @@ export function Modal({ open, title, onClose, children, }) {
         onClose();
     };
     document.addEventListener("keydown", onKey);
+    // Keep the page behind the dialog from scrolling (matters most on phones).
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     const first = panel.current?.querySelector("input, select, textarea");
-    first?.focus();
-    return () => document.removeEventListener("keydown", onKey);
+    first?.focus({ preventScroll: true });
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previous;
+    };
   }, [open, onClose]);
   if (!open)
     return null;

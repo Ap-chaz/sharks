@@ -69,7 +69,7 @@ export default function ReportsPage() {
 
     <Panel title="Appointment outcomes">
      <div className="bar-list">
-      {statuses.map((row) => (<BarRow key={row.label} label={row.label} value={row.value} max={maxDept}/>))}
+      {statuses.map((row) => (<BarRow key={row.label} label={row.label} value={row.value} max={Math.max(1, ...statuses.map((item) => item.value))}/>))}
      </div>
     </Panel>
 

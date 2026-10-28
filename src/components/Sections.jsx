@@ -1,30 +1,122 @@
+import { useCallback, useEffect, useRef, useState } from "react";
+import stepA from "@/assets/clinic/step-book-online.jpg";
+import stepB from "@/assets/clinic/thumbnail-4.jpeg";
+import stepC from "@/assets/clinic/thumbnail-1.jpeg";
+import stepD from "@/assets/clinic/thumbnail-5.jpeg";
 import { ArrowRight, BadgeCheck, ChevronDown, Clock3, Lightbulb, Mail, MapPin, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ButtonLink } from "./Button";
 import { Eyebrow, MixedHeading } from "./PageParts";
 import { clinicInfo, doctors, faqs, healthTips, hours, insurers, processSteps, services } from "@/lib/clinic-data";
 
-/** Four colored steps explaining how a visit works. */
+/** Pinned scroll-story: the stage stays put while the image and active step change with scroll. */
+const stepImages = [stepA, stepB, stepC, stepD];
 export function ProcessSteps() {
+  const ref = useRef(null);
+  const [active, setActive] = useState(0);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return undefined;
+    let raf = 0;
+    const update = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const total = Math.max(el.offsetHeight - window.innerHeight, 1);
+        const p = Math.min(1, Math.max(0, -el.getBoundingClientRect().top / total));
+        el.style.setProperty("--p", p.toFixed(3));
+        setActive(Math.min(processSteps.length - 1, Math.floor(p * processSteps.length)));
+      });
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("scroll", update); window.removeEventListener("resize", update); };
+  }, []);
   return (
-    <section className="band band-sky">
-      <div className="section shell">
-        <div className="section-heading">
-          <div>
-            <Eyebrow>How it works</Eyebrow>
-            <MixedHeading regular="Simple from the start." strong="Clear all the way through." />
-          </div>
-          <p>From first booking to follow-up, every step is designed to feel easy and supported.</p>
+    <section className="pin" ref={ref} style={{ "--n": processSteps.length }}>
+      <div className="pin-stage shell">
+        <div className="pin-copy">
+          <Eyebrow>How it works</Eyebrow>
+          <MixedHeading regular="Simple from the start." strong="Clear all the way through." />
+          <ol className="pin-steps">
+            {processSteps.map((step, i) => (
+              <li key={step.title} className={i === active ? "is-active" : i < active ? "is-done" : undefined}>
+                <span className="pin-num">{String(i + 1).padStart(2, "0")}</span>
+                <div><h3>{step.title}</h3><p>{step.copy}</p></div>
+              </li>
+            ))}
+          </ol>
+          <div className="pin-progress" aria-hidden="true"><span /></div>
         </div>
-        <div className="steps-grid">
-          {processSteps.map((step, index) => (
-            <article className={`step-card tone-${step.tone}`} key={step.title}>
-              <span className="step-number">{String(index + 1).padStart(2, "0")}</span>
-              <h3>{step.title}</h3>
-              <p>{step.copy}</p>
-            </article>
+        <div className="pin-frame" aria-hidden="true">
+          {stepImages.map((src, i) => <img key={i} src={src} alt="" className={i === active ? "is-active" : undefined} />)}
+          <span className="pin-badge">{String(active + 1).padStart(2, "0")} / {String(processSteps.length).padStart(2, "0")}</span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const patientStories = [
+  { name: "Mary W.", quote: "The doctors were extremely professional and caring. I felt listened to from the moment I arrived." },
+  { name: "James K.", quote: "Booking was easy, the team was warm, and I received clear guidance throughout my visit." },
+  { name: "Amina N.", quote: "Modern facilities, experienced doctors and outstanding attention to every detail." },
+  { name: "Grace M.", quote: "My daughter is scared of clinics, but the pediatric team made her smile and feel safe the whole visit." },
+  { name: "Daniel O.", quote: "The specialist walked me through my scan on screen and made sure I understood every step of the plan." },
+  { name: "Faith C.", quote: "They remembered my history, followed up after my visit and made it easy to get my records." },
+];
+const STORY_MS = 7000;
+
+/** Auto-advancing story rail: active card on the left, next one peeking in, segmented progress. */
+export function PatientStories() {
+  const n = patientStories.length;
+  const [index, setIndex] = useState(0); // 0..n; n is the first card of the repeated copy (same look as 0)
+  const [snap, setSnap] = useState(false); // true = move without animation (seamless loop reset)
+  const touchX = useRef(null);
+  const active = index % n;
+  const jump = useCallback((to, then) => {
+    setSnap(true); setIndex(to);
+    requestAnimationFrame(() => requestAnimationFrame(() => { setSnap(false); if (then !== undefined) setIndex(then); }));
+  }, []);
+  const next = useCallback(() => setIndex((i) => Math.min(i + 1, n)), [n]);
+  const prev = useCallback(() => { if (index === 0) jump(n, n - 1); else setIndex(index - 1); }, [index, jump, n]);
+  const onTrackEnd = (e) => { if (e.target === e.currentTarget && index >= n) jump(index - n); };
+  const cards = [0, 1, 2, 3].flatMap((copy) => patientStories.map((st) => ({ ...st, copy })));
+  return (
+    <section className="section shell stories">
+      <div className="section-heading">
+        <div>
+          <Eyebrow>Patient stories</Eyebrow>
+          <MixedHeading regular="Trusted by people." strong="Remembered for care." />
+        </div>
+      </div>
+      <div
+        className={`story-viewport${snap ? " is-snap" : ""}`}
+        onTouchStart={(e) => { touchX.current = e.touches[0].clientX; }}
+        onTouchEnd={(e) => {
+          const dx = e.changedTouches[0].clientX - (touchX.current ?? 0);
+          if (Math.abs(dx) > 40) { if (dx < 0) next(); else prev(); }
+          touchX.current = null;
+        }}
+      >
+        <div className="story-track" style={{ "--i": index }} onTransitionEnd={onTrackEnd}>
+          {cards.map((st, i) => (
+            <blockquote key={`${st.copy}-${st.name}`} className={`story-card${i === index ? " is-active" : ""}`} onClick={() => i < n && setIndex(i)} aria-hidden={i !== index}>
+              <p>“{st.quote}”</p>
+              <footer><span>{st.name}</span><span>Verified patient</span></footer>
+            </blockquote>
           ))}
         </div>
+      </div>
+      <div className="story-controls">
+        <div className="story-bars" role="tablist" aria-label="Patient stories">
+          {patientStories.map((st, i) => (
+            <button key={st.name} type="button" role="tab" aria-selected={i === active} aria-label={`Story ${i + 1}: ${st.name}`} className={i < active ? "is-done" : i === active ? "is-current" : undefined} onClick={() => setIndex(i)}>
+              <span key={i === active ? `a${active}${index === 0 ? "" : ""}` : "x"} style={i === active ? { animationDuration: `${STORY_MS}ms` } : undefined} onAnimationEnd={i === active ? next : undefined} />
+            </button>
+          ))}
+        </div>
+        <span className="story-count">{active + 1} / {n}</span>
       </div>
     </section>
   );

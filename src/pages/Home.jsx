@@ -1,14 +1,11 @@
 import { usePageMeta } from "@/lib/use-page-meta";
 import { Link } from "react-router-dom";
-import { ArrowRight, Check, CheckCircle2 } from "lucide-react";
-import heroImage from "@/assets/clinic/thumbnail-6.jpeg";
+import { ArrowRight, Check } from "lucide-react";
 import careImage from "@/assets/clinic/thumbnail-4.jpeg";
-import doctorImage from "@/assets/clinic/thumbnail-5.jpeg";
-import childImage from "@/assets/clinic/thumbnail-7.jpeg";
 import { ButtonLink } from "@/components/Button";
 import { CtaBand, Eyebrow, MixedHeading } from "@/components/PageParts";
 import { services } from "@/lib/clinic-data";
-import { DepartmentTiles, FaqList, HealthTips, HoursAndLocation, InsuranceStrip, ProcessSteps } from "@/components/Sections";
+import { DepartmentTiles, FaqList, HealthTips, HoursAndLocation, InsuranceStrip, PatientStories, ProcessSteps } from "@/components/Sections";
 const pageMeta = [
   { title: "SHARKS Clinic — Modern Healthcare in Nairobi" },
   { name: "description", content: "Compassionate, modern healthcare in Nairobi with trusted specialists, advanced facilities and 24/7 support." },
@@ -20,16 +17,10 @@ export default function HomePage() {
   usePageMeta(pageMeta);
   return <>
   <section className="home-hero">
-   <div className="hero-orbs" aria-hidden="true">
-    <div className="orb orb-pink"><img src={doctorImage} alt=""/></div>
-    <div className="orb orb-green"><img src={childImage} alt=""/></div>
-    <div className="orb orb-orange"/>
-    <div className="orb orb-indigo"/>
-    <div className="orb orb-petal"><img src={heroImage} alt=""/></div>
-   </div>
-   <div className="hero-copy"><Eyebrow>Healthcare, centered on you</Eyebrow><MixedHeading as="h1" regular="Your health." strong="Our priority."/><p>Premium healthcare powered by innovation, compassion and clinical excellence across Kenya.</p><div className="hero-actions"><ButtonLink to="/appointment" variant="accent">Book appointment <ArrowRight size={16}/></ButtonLink><ButtonLink to="/services" variant="outline">Explore services</ButtonLink></div></div>
-   <div className="hero-float hero-stat"><strong>10K+</strong><span>patients cared for</span></div>
-   <div className="hero-float hero-booking"><CheckCircle2 size={22}/><div><b>Appointment confirmed</b><span>Dr. Jane Smith · Mon</span></div></div>
+   <video className="hero-video" src="/hero.mp4" poster="/hero-poster.jpg" autoPlay muted loop playsInline preload="auto" aria-hidden="true"/>
+   <div className="hero-scrim" aria-hidden="true"/>
+   <div className="hero-copy"><Eyebrow>Healthcare, centered on you</Eyebrow><MixedHeading as="h1" regular="Your health." strong="Our priority."/><p>Premium healthcare powered by innovation, compassion and clinical excellence across Kenya.</p><div className="hero-actions"><ButtonLink to="/appointment" variant="accent">Book appointment <ArrowRight size={16}/></ButtonLink><ButtonLink to="/services" variant="outline">Explore services</ButtonLink></div><div className="hero-trust"><span><Check size={14}/> Emergency care 24 / 7</span><span><Check size={14}/> SHA, NHIF &amp; major insurers</span><span><Check size={14}/> M-Pesa, card &amp; cash</span></div></div>
+   <div className="hero-stats"><div><strong>10K+</strong><span>Patients cared for</span></div><div><strong>8</strong><span>Specialist departments</span></div><div><strong>24 / 7</strong><span>Emergency support</span></div></div>
   </section>
 
     <section className="section shell"><div className="section-heading"><div><Eyebrow>Our services</Eyebrow><MixedHeading regular="Care for every stage." strong="Expertise for every need."/></div><p>Comprehensive healthcare solutions delivered by experienced medical professionals.</p></div><div className="service-grid">{services.slice(0, 3).map(({ title, category, description, Icon }) => <article className="service-card" key={title}><div className="card-top"><Icon size={28}/><span className="badge">{category}</span></div><h3>{title}</h3><p>{description}</p><Link to="/services">Explore care <ArrowRight size={15}/></Link></article>)}</div></section>
@@ -39,11 +30,7 @@ export default function HomePage() {
   <ProcessSteps />
   <DepartmentTiles />
 
-  <section className="section shell"><div className="section-heading"><div><Eyebrow>Patient stories</Eyebrow><MixedHeading regular="Trusted by people." strong="Remembered for care."/></div></div><div className="quote-grid">{[
-      ["The doctors were extremely professional and caring. I felt listened to from the moment I arrived.", "Mary W."],
-      ["Booking was easy, the team was warm, and I received clear guidance throughout my visit.", "James K."],
-      ["Modern facilities, experienced doctors and outstanding attention to every detail.", "Amina N."],
-    ].map(([quote, name]) => <blockquote key={name}><p>“{quote}”</p><footer><span>{name}</span><span>Verified patient</span></footer></blockquote>)}</div></section>
+  <PatientStories />
   <HealthTips />
   <InsuranceStrip />
   <FaqList />
