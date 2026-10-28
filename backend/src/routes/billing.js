@@ -177,3 +177,50 @@ billingRouter.patch('/invoices/:id', async (req, res, next) => {
     next(err);
   }
 });
+
+const createPaymentSchema = z.object({
+  amount: moneySchema.refine((v) => v > 0),
+  method: z.enum(['cash', 'mpesa', 'card', 'insurance', 'other']),
+  reference: z.string().trim().min(1).max(80).optional(),
+});
+
+billingRouter.post('/invoices/:id/payments', async (req, res, next) => {
+  try {
+    const id = parseId(req);
+    if (!id) return res.status(400).json({ error: 'Invalid id' });
+    const p = createPaymentSchema.safeParse(req.body);
+    if (!p.success) return res.status(400).json({ error: 'Invalid request' });
+    const d = p.data;
+    const conn = await pool.getConnection();
+    try {
+      await conn.beginTransaction();
+      const stop = async (code, msg) => {
+        await conn.rollback();
+        return res.status(code).json({ error: msg });
+      };
+      const [found] = await conn.query('SELECT status FROM invoices WHERE id = ? FOR UPDATE', [id]);
+      if (found.length === 0) return await stop(404, 'Not found');
+      if (found[0].status !== 'issued') return await stop(409, 'Invoice is not issued');
+      const [t] = await conn.query('SELECT COALESCE(SUM(quantity * unit_price), 0) AS total FROM invoice_items WHERE invoice_id = ?', [id]);
+      const [s] = await conn.query('SELECT COALESCE(SUM(amount), 0) AS paid FROM payments WHERE invoice_id = ?', [id]);
+      const totalCents = Math.round(Number(t[0].total) * 100);
+      const paidCents = Math.round(Number(s[0].paid) * 100);
+      const newCents = Math.round(d.amount * 100);
+      if (paidCents + newCents > totalCents) return await stop(409, 'Payment exceeds the amount due');
+      const [result] = await conn.query(
+        'INSERT INTO payments (invoice_id, amount, method, reference, paid_at, received_by) VALUES (?, ?, ?, ?, UTC_TIMESTAMP(), ?)',
+        [id, d.amount, d.method, d.reference ?? null, req.user.id]
+      );
+      await conn.commit();
+      await audit(req, 'payment_recorded', 'payment', result.insertId, { invoiceId: id, method: d.method });
+      res.status(201).json({ id: result.insertId });
+    } catch (err) {
+      await conn.rollback();
+      throw err;
+    } finally {
+      conn.release();
+    }
+  } catch (err) {
+    next(err);
+  }
+});
