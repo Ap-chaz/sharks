@@ -511,6 +511,7 @@ h1, h2, h3 { font-weight: 400; margin: 0; }
   .mobile-nav { display: grid; position: absolute; top: 100%; left: 16px; right: 16px; margin-top: 4px; padding: 12px; gap: 2px; background: #fff; border-radius: var(--radius-panel); box-shadow: var(--shadow-lg); }
   .mobile-nav > a:not(.button) { padding: 13px 14px; border-radius: var(--radius-pill); font-size: 15px; font-weight: 500; }
   .mobile-nav > a:not(.button):hover { background: var(--color-cream); }
+    .mobile-nav > a:not(.button) { color: var(--color-carbon-black); }
   .mobile-book { margin-top: 8px; }
   .home-hero { min-height: 640px; padding-bottom: 150px; }
   .hero-booking { display: none; }
@@ -531,6 +532,7 @@ h1, h2, h3 { font-weight: 400; margin: 0; }
   .service-row .service-icon { display: none; }
   .form-page { grid-template-columns: 1fr; gap: 48px; padding-block: 48px 80px; }
   .form-intro { padding-top: 0; }
+    .form-page { padding-top: calc(var(--header-h) + 36px); }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 44px; padding-right: 0; }
   .footer-about { grid-column: 1 / -1; }
   .footer-bottom { padding-right: 0; }
