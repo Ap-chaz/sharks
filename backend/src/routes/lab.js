@@ -89,3 +89,57 @@ labRouter.get('/requests/:id', requireRole('administrator', 'doctor'), async (re
     next(err);
   }
 });
+
+const patchRequestSchema = z
+  .object({
+    status: z.enum(['in_progress', 'cancelled']).optional(),
+    notes: z.string().trim().max(500).optional(),
+  })
+  .refine((v) => Object.keys(v).length > 0);
+
+labRouter.patch('/requests/:id', requireRole('administrator', 'doctor', 'receptionist', 'lab_technician'), async (req, res, next) => {
+  try {
+    const id = parseId(req);
+    if (!id) return res.status(400).json({ error: 'Invalid id' });
+    const p = patchRequestSchema.safeParse(req.body);
+    if (!p.success) return res.status(400).json({ error: 'Invalid request' });
+    const d = p.data;
+    if (d.notes !== undefined && !['administrator', 'doctor'].includes(req.user.role)) {
+      return res.status(403).json({ error: 'Forbidden' });
+    }
+    const conn = await pool.getConnection();
+    try {
+      await conn.beginTransaction();
+      const stop = async (code, msg) => {
+        await conn.rollback();
+        return res.status(code).json({ error: msg });
+      };
+      const [found] = await conn.query('SELECT status FROM lab_requests WHERE id = ? FOR UPDATE', [id]);
+      if (found.length === 0) return await stop(404, 'Not found');
+      const current = found[0].status;
+      if (current === 'completed' || current === 'cancelled') return await stop(409, 'Request is closed');
+      if (d.status === 'in_progress' && current !== 'requested') return await stop(409, 'Already in progress');
+      const sets = [];
+      const values = [];
+      if (d.notes !== undefined) {
+        sets.push('notes = ?');
+        values.push(d.notes);
+      }
+      if (d.status !== undefined) {
+        sets.push('status = ?');
+        values.push(d.status);
+      }
+      await conn.query('UPDATE lab_requests SET ' + sets.join(', ') + ' WHERE id = ?', [...values, id]);
+      await conn.commit();
+      await audit(req, 'lab_request_updated', 'lab_request', id, { fields: Object.keys(d) });
+      res.json({ ok: true });
+    } catch (err) {
+      await conn.rollback();
+      throw err;
+    } finally {
+      conn.release();
+    }
+  } catch (err) {
+    next(err);
+  }
+});
