@@ -115,3 +115,65 @@ billingRouter.get('/invoices/:id', async (req, res, next) => {
     next(err);
   }
 });
+
+const patchInvoiceSchema = z
+  .object({
+    status: z.enum(['issued', 'void']).optional(),
+    notes: z.string().trim().max(500).optional(),
+    items: z.array(itemSchema).min(1).max(50).optional(),
+  })
+  .refine((v) => Object.keys(v).length > 0);
+
+billingRouter.patch('/invoices/:id', async (req, res, next) => {
+  try {
+    const id = parseId(req);
+    if (!id) return res.status(400).json({ error: 'Invalid id' });
+    const p = patchInvoiceSchema.safeParse(req.body);
+    if (!p.success) return res.status(400).json({ error: 'Invalid request' });
+    const d = p.data;
+    const conn = await pool.getConnection();
+    try {
+      await conn.beginTransaction();
+      const stop = async (code, msg) => {
+        await conn.rollback();
+        return res.status(code).json({ error: msg });
+      };
+      const [found] = await conn.query('SELECT status FROM invoices WHERE id = ? FOR UPDATE', [id]);
+      if (found.length === 0) return await stop(404, 'Not found');
+      const current = found[0].status;
+      if (current === 'void') return await stop(409, 'Invoice is void');
+      if (d.items && current !== 'draft') return await stop(409, 'Items are locked');
+      if (d.status === 'issued' && current !== 'draft') return await stop(409, 'Invoice is already issued');
+      if (d.status === 'void') {
+        const [pay] = await conn.query('SELECT COUNT(*) AS n FROM payments WHERE invoice_id = ?', [id]);
+        if (pay[0].n > 0) return await stop(409, 'Invoice has payments');
+      }
+      const sets = ['updated_at = CURRENT_TIMESTAMP'];
+      const values = [];
+      if (d.notes !== undefined) {
+        sets.push('notes = ?');
+        values.push(d.notes);
+      }
+      if (d.status !== undefined) {
+        sets.push('status = ?');
+        values.push(d.status);
+      }
+      await conn.query('UPDATE invoices SET ' + sets.join(', ') + ' WHERE id = ?', [...values, id]);
+      if (d.items) {
+        await conn.query('DELETE FROM invoice_items WHERE invoice_id = ?', [id]);
+        const rows = d.items.map((i) => [id, i.description, i.quantity, i.unitPrice]);
+        await conn.query('INSERT INTO invoice_items (invoice_id, description, quantity, unit_price) VALUES ?', [rows]);
+      }
+      await conn.commit();
+      await audit(req, 'invoice_updated', 'invoice', id, { fields: Object.keys(d) });
+      res.json({ ok: true });
+    } catch (err) {
+      await conn.rollback();
+      throw err;
+    } finally {
+      conn.release();
+    }
+  } catch (err) {
+    next(err);
+  }
+});
