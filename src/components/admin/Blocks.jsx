@@ -26,7 +26,7 @@ export function RowActions({ onEdit, onDelete }) {
   </div>);
 }
 export function BarRow({ label, value, max, display }) {
-  const width = max > 0 ? Math.max(2, Math.round((value / max) * 100)) : 0;
+  const width = max > 0 ? Math.min(100, Math.max(2, Math.round((value / max) * 100))) : 0;
   return (<div className="bar-row">
    <span className="bar-label">{label}</span>
    <span className="bar-track">

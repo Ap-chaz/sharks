@@ -1,7 +1,8 @@
 import { Link, NavLink } from "react-router-dom";
 import { ArrowUpRight, Clock3, Mail, MapPin, Menu, MessageCircle, Phone, X } from "lucide-react";
 import { useState } from "react";
-import logo from "@/assets/clinic/logo.jpg";
+import logo from "@/assets/clinic/logo-mark.png";
+import logoFull from "@/assets/clinic/logo-full.png";
 import { ButtonLink } from "./Button";
 import { ScrollMotion } from "./ScrollMotion";
 import { clinicInfo, hours, services } from "@/lib/clinic-data";
@@ -47,7 +48,7 @@ export function Footer() {
   return <footer className="site-footer">
     <div className="shell footer-grid">
       <div className="footer-col footer-about">
-        <div className="footer-brand"><strong>SHARKS</strong> Clinic</div>
+        <div className="footer-brand"><img src={logoFull} alt="SHARKS Clinic"/></div>
         <p>Quality healthcare through innovation, compassion and excellence. Modern care for every stage of life, in the heart of Nairobi.</p>
         <div className="footer-emergency">
           <small>Emergency care, 24 / 7</small>
@@ -82,5 +83,5 @@ export function Footer() {
 }
 
 export function SiteLayout({ children }) {
-  return <><ScrollMotion /><div className="topbar"><div className="shell"><span className="topbar-tag"><span className="topbar-dot" /> <span>Emergency care open 24 / 7</span></span><a href="tel:+254722405988"><Phone size={14} /> +254 722 405 988</a></div></div><Header /><main>{children}</main><Footer /><a className="floating-contact" href="https://wa.me/254722405988?text=Hello%20SHARKS%20Clinic,%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" rel="noreferrer" aria-label="Message Sharks Clinic on WhatsApp"><MessageCircle /></a></>;
+  return <><ScrollMotion /><Header /><main>{children}</main><Footer /><a className="floating-contact" href="https://wa.me/254722405988?text=Hello%20SHARKS%20Clinic,%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" rel="noreferrer" aria-label="Message Sharks Clinic on WhatsApp"><MessageCircle /></a></>;
 }

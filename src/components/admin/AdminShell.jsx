@@ -1,7 +1,7 @@
 import { ExternalLink, LogOut, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
-import logo from "@/assets/clinic/logo.jpg";
+import logo from "@/assets/clinic/logo-full.png";
 import { signOut } from "@/lib/clinic-db";
 import { adminNavSections, pageMetaFor } from "./nav";
 /** Sidebar shell that every dashboard view renders into. */
@@ -12,6 +12,30 @@ export function AdminShell({ onSignOut }) {
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
+  // While the mobile drawer is open: lock page scroll, allow Escape to close,
+  // and close it if the window is resized up to the desktop layout.
+  useEffect(() => {
+    if (!menuOpen)
+      return undefined;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (event) => {
+      if (event.key === "Escape")
+        setMenuOpen(false);
+    };
+    const wide = window.matchMedia("(min-width: 901px)");
+    const onWide = (event) => {
+      if (event.matches)
+        setMenuOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    wide.addEventListener("change", onWide);
+    return () => {
+      document.body.style.overflow = previous;
+      document.removeEventListener("keydown", onKey);
+      wide.removeEventListener("change", onWide);
+    };
+  }, [menuOpen]);
   function handleSignOut() {
     signOut();
     onSignOut();
@@ -19,9 +43,8 @@ export function AdminShell({ onSignOut }) {
   return (<div className="admin-shell">
    <aside className={`admin-sidebar ${menuOpen ? "open" : ""}`}>
     <div className="admin-brand">
-     <img src={logo} alt=""/>
      <div className="admin-brand-text">
-      <span>SHARKS Clinic</span>
+      <img src={logo} alt="SHARKS Clinic"/>
       <small>Management system</small>
      </div>
      <button type="button" className="admin-sidebar-close" onClick={() => setMenuOpen(false)} aria-label="Close menu">
@@ -70,7 +93,7 @@ export function AdminShell({ onSignOut }) {
        <span className="admin-avatar" aria-hidden="true">
         A
        </span>
-       admin
+       <span className="admin-user-name">admin</span>
       </span>
      </div>
     </header>

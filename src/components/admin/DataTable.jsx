@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronLeft, ChevronRight, Search } from "lucide-react";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 /** Search, filter, sort and pagination state for any admin collection. */
 export function useTable(rows, config) {
   const configRef = useRef(config);
@@ -67,6 +67,34 @@ export function useTable(rows, config) {
 }
 export function DataTable({ columns, table, emptyText, toolbar, }) {
   const activeFilter = table.state.filter;
+  const scrollRef = useRef(null);
+  /**
+   * Switch to a stacked "card per row" layout whenever the table does not fit
+   * its container. Measuring the real width (rather than guessing a viewport
+   * breakpoint) means every table gets the layout it needs at every screen
+   * size, including tablets and small laptops with the sidebar open.
+   */
+  useLayoutEffect(() => {
+    const el = scrollRef.current;
+    if (!el)
+      return undefined;
+    const measure = () => {
+      el.classList.remove("is-stacked");
+      el.classList.toggle("is-stacked", el.scrollWidth > el.clientWidth + 1);
+    };
+    measure();
+    if (typeof ResizeObserver === "undefined")
+      return undefined;
+    let lastWidth = el.clientWidth;
+    const observer = new ResizeObserver(() => {
+      if (el.clientWidth === lastWidth)
+        return;
+      lastWidth = el.clientWidth;
+      measure();
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  });
   return (<div className="table-card">
    <div className="table-toolbar">
     <label className="table-search">
@@ -79,11 +107,11 @@ export function DataTable({ columns, table, emptyText, toolbar, }) {
     </span>
    </div>
 
-   <div className="table-scroll">
+   <div className="table-scroll" ref={scrollRef}>
     <table className="data-table">
      <thead>
       <tr>
-       {columns.map((column) => (<th key={column.key} style={column.width ? { width: column.width } : undefined} className={column.align === "end" ? "align-end" : undefined}>
+       {columns.map((column) => (<th key={column.key} style={column.width && column.key !== "actions" ? { width: column.width } : undefined} className={[column.align === "end" ? "align-end" : "", column.key === "actions" ? "col-actions" : ""].filter(Boolean).join(" ") || undefined}>
          {column.sortable ? (<button type="button" className="sort-button" onClick={() => table.toggleSort(column.key)}>
            {column.label}
            <ChevronDown size={13} className={table.state.sortKey === column.key
@@ -101,7 +129,7 @@ export function DataTable({ columns, table, emptyText, toolbar, }) {
          {table.state.search || activeFilter !== "All" ? "No records match your filters." : emptyText}
         </td>
        </tr>) : (table.visible.map((row) => (<tr key={row.id}>
-         {columns.map((column) => (<td key={column.key} className={column.align === "end" ? "align-end" : undefined}>
+         {columns.map((column) => (<td key={column.key} data-label={column.label || undefined} className={[column.align === "end" ? "align-end" : "", column.key === "actions" ? "col-actions" : ""].filter(Boolean).join(" ") || undefined}>
            {column.render ? column.render(row) : String(row[column.key] ?? "")}
           </td>))}
         </tr>)))}
