@@ -143,3 +143,45 @@ labRouter.patch('/requests/:id', requireRole('administrator', 'doctor', 'recepti
     next(err);
   }
 });
+
+const createResultSchema = z.object({
+  resultText: z.string().trim().min(1).max(2000),
+  unit: z.string().trim().min(1).max(30).optional(),
+  referenceRange: z.string().trim().min(1).max(80).optional(),
+});
+
+labRouter.post('/requests/:id/result', requireRole('administrator', 'lab_technician'), async (req, res, next) => {
+  try {
+    const id = parseId(req);
+    if (!id) return res.status(400).json({ error: 'Invalid id' });
+    const p = createResultSchema.safeParse(req.body);
+    if (!p.success) return res.status(400).json({ error: 'Invalid request' });
+    const d = p.data;
+    const conn = await pool.getConnection();
+    try {
+      await conn.beginTransaction();
+      const stop = async (code, msg) => {
+        await conn.rollback();
+        return res.status(code).json({ error: msg });
+      };
+      const [found] = await conn.query('SELECT status FROM lab_requests WHERE id = ? FOR UPDATE', [id]);
+      if (found.length === 0) return await stop(404, 'Not found');
+      if (!['requested', 'in_progress'].includes(found[0].status)) return await stop(409, 'Request is closed');
+      await conn.query(
+        'INSERT INTO lab_results (request_id, result_text, unit, reference_range, entered_by, entered_at) VALUES (?, ?, ?, ?, ?, UTC_TIMESTAMP())',
+        [id, d.resultText, d.unit ?? null, d.referenceRange ?? null, req.user.id]
+      );
+      await conn.query("UPDATE lab_requests SET status = 'completed' WHERE id = ?", [id]);
+      await conn.commit();
+      await audit(req, 'lab_result_entered', 'lab_request', id, {});
+      res.status(201).json({ ok: true });
+    } catch (err) {
+      await conn.rollback();
+      throw err;
+    } finally {
+      conn.release();
+    }
+  } catch (err) {
+    next(err);
+  }
+});
