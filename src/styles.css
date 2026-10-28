@@ -238,6 +238,7 @@ h1, h2, h3 { font-weight: 400; margin: 0; }
 .cta-inner .mixed-heading { color: #fff; font-size: clamp(38px, 5vw, 56px); line-height: 1; }
 .cta-inner .mixed-heading strong { color: rgba(255,255,255,.55); }
 .cta-inner p { color: rgba(255,255,255,.65); max-width: 440px; margin: 20px 0 0; font-size: var(--text-body-lg); }
+.cta-inner .button { flex: none; white-space: nowrap; }
 .band + .cta-band, .section + .cta-band { margin-top: 0; }
 
 /* ---------- Footer ---------- */
