@@ -556,7 +556,7 @@ h1, h2, h3 { font-weight: 400; margin: 0; }
   .shell { width: calc(100% - 32px); }
   .topbar .shell { justify-content: center; }
   .topbar .topbar-tag { display: none; }
-  .home-hero { padding-inline: 16px; padding-top: calc(var(--header-h) + 215px); min-height: 760px; }
+  .home-hero { padding-inline: 16px; padding-top: calc(var(--header-h) + 215px); min-height: max(760px, 100svh); }
   .orb-pink { top: 74px; --size: 190px; }
   .orb-green { --size: 170px; }
   .orb-orange, .orb-indigo, .orb-petal { --size: 150px; }
