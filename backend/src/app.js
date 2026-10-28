@@ -13,6 +13,7 @@ import { appointmentsRouter } from './routes/appointments.js';
 import { publicRouter } from './routes/public.js';
 import { catalogRouter } from './routes/catalog.js';
 import { billingRouter } from './routes/billing.js';
+import { labRouter } from './routes/lab.js';
 
 function requireSameOrigin(req, res, next) {
   const unsafe = !['GET', 'HEAD', 'OPTIONS'].includes(req.method);
@@ -55,6 +56,7 @@ export function createApp() {
   app.use('/api/public', publicRouter);
   app.use('/api/catalog', catalogRouter);
   app.use('/api/billing', billingRouter);
+  app.use('/api/lab', labRouter);
 
   app.use(notFound);
   app.use(errorHandler);
