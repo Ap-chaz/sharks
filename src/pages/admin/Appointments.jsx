@@ -6,6 +6,7 @@ import { ConfirmDialog, Modal } from "@/components/admin/Modal";
 import { NewAppointmentForm } from "@/components/admin/NewAppointmentForm";
 import { StatusPill } from "@/components/admin/StatusPill";
 import { showToast } from "@/lib/toast";
+import { useAdminUser } from "@/lib/admin-user";
 import { shiftDate, todayInNairobi, useAppointments } from "@/lib/use-appointments";
 
 const pageMeta = [
@@ -28,12 +29,23 @@ export default function AppointmentsPage() {
     pageSize: 8,
   });
   const [cancelRow, setCancelRow] = useState(null);
+  const role = useAdminUser()?.role;
+  const canFinish = role === "administrator" || role === "doctor";
   const [creating, setCreating] = useState(false);
 
   async function confirmRow(row) {
     try {
       await setStatus(row.id, "confirmed");
       showToast(`Appointment ${row.code} confirmed.`);
+    } catch (e) {
+      showToast(e.message, "error");
+    }
+  }
+
+  async function finishRow(row, statusKey, label) {
+    try {
+      await setStatus(row.id, statusKey);
+      showToast(`Appointment ${row.code} marked ${label}.`);
     } catch (e) {
       showToast(e.message, "error");
     }
@@ -100,7 +112,7 @@ export default function AppointmentsPage() {
     {
       key: "actions",
       label: "",
-      width: "130px",
+      width: "280px",
       align: "end",
       render: (row) => (
         <span className="cell-actions">
@@ -108,6 +120,24 @@ export default function AppointmentsPage() {
             <button type="button" className="row-confirm" onClick={() => confirmRow(row)}>
               <Check size={14} /> Confirm
             </button>
+          )}
+          {row.statusKey === "confirmed" && canFinish && (
+            <>
+              <button
+                type="button"
+                className="row-confirm"
+                onClick={() => finishRow(row, "completed", "completed")}
+              >
+                <Check size={14} /> Complete
+              </button>
+              <button
+                type="button"
+                className="row-confirm"
+                onClick={() => finishRow(row, "no_show", "no show")}
+              >
+                No show
+              </button>
+            </>
           )}
           {(row.statusKey === "pending" || row.statusKey === "confirmed") && (
             <span className="row-actions">
