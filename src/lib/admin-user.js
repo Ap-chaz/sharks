@@ -18,6 +18,7 @@ const PAGES = {
     "/admin/prescriptions",
     "/admin/billing",
     "/admin/reports",
+    "/admin/feedback",
     "/admin/staff",
     "/admin/settings",
   ],
