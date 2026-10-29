@@ -2,7 +2,7 @@ import { ExternalLink, LogOut, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import logo from "@/assets/clinic/logo-full.png";
-import { signOut } from "@/lib/clinic-db";
+import { api } from "@/lib/api";
 import { adminNavSections, pageMetaFor } from "./nav";
 /** Sidebar shell that every dashboard view renders into. */
 export function AdminShell({ onSignOut }) {
@@ -36,8 +36,8 @@ export function AdminShell({ onSignOut }) {
       wide.removeEventListener("change", onWide);
     };
   }, [menuOpen]);
-  function handleSignOut() {
-    signOut();
+  async function handleSignOut() {
+    await api("/auth/logout", { method: "POST" }).catch(() => {});
     onSignOut();
   }
   return (<div className="admin-shell">

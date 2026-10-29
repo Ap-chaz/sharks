@@ -1,7 +1,7 @@
 import { ShieldAlert } from "lucide-react";
 import { useState } from "react";
 import logo from "@/assets/clinic/logo-full.png";
-import { DEMO_CREDENTIALS, signIn } from "@/lib/clinic-db";
+import { api } from "@/lib/api";
 import { showToast } from "@/lib/toast";
 /** Simulated sign-in. It demonstrates the dashboard only — it is not security. */
 export function LoginScreen({ onSuccess }) {
@@ -9,7 +9,7 @@ export function LoginScreen({ onSuccess }) {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState("");
-  function submit(event) {
+  async function submit(event) {
     event.preventDefault();
     const next = {};
     if (!username.trim())
@@ -21,9 +21,10 @@ export function LoginScreen({ onSuccess }) {
       setFormError("");
       return;
     }
-    if (!signIn(username, password)) {
+    const result = await api("/auth/login", { method: "POST", body: { username: username.trim(), password } }).then(() => null, (error) => error);
+    if (result) {
       setErrors({});
-      setFormError("Invalid username or password. Use the demo credentials shown below.");
+      setFormError(result.message);
       return;
     }
     setErrors({});
@@ -61,7 +62,7 @@ export function LoginScreen({ onSuccess }) {
     </button>
 
     <p className="login-hint">
-     Demo credentials: <strong>{DEMO_CREDENTIALS.username}</strong> / <strong>{DEMO_CREDENTIALS.password}</strong>
+     Sign in with your clinic staff account.
     </p>
     <p className="login-warning">
      <ShieldAlert size={15}/>
