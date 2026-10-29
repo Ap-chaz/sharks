@@ -263,7 +263,6 @@ export function DoctorCards({ images }) {
               <li><strong>Focus</strong> {doctor.focus}</li>
               <li><strong>Available</strong> {doctor.days}</li>
             </ul>
-            <ButtonLink to="/appointment" variant="outline">Book with {doctor.name.split(" ")[1]} <ArrowRight size={15} /></ButtonLink>
           </div>
         </article>
       ))}

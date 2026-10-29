@@ -1,7 +1,6 @@
 import { ExternalLink, LogOut, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
-import logo from "@/assets/clinic/logo-full.png";
 import { api } from "@/lib/api";
 import { canOpen, homePathFor, roleLabel, useAdminUser, userInitial } from "@/lib/admin-user";
 import { adminNavSections, pageMetaFor } from "./nav";
@@ -54,7 +53,7 @@ export function AdminShell({ onSignOut }) {
    <aside className={`admin-sidebar ${menuOpen ? "open" : ""}`}>
     <div className="admin-brand">
      <div className="admin-brand-text">
-      <img src={logo} alt="SHARKS Clinic"/>
+      <span><strong>SHARKS</strong> Clinic</span>
       <small>Management system</small>
      </div>
      <button type="button" className="admin-sidebar-close" onClick={() => setMenuOpen(false)} aria-label="Close menu">

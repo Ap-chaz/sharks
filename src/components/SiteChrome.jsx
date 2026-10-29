@@ -1,8 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import { ArrowUpRight, Clock3, Mail, MapPin, Menu, MessageCircle, Phone, X } from "lucide-react";
 import { useState } from "react";
-import logo from "@/assets/clinic/logo-mark.png";
-import logoFull from "@/assets/clinic/logo-full.png";
 import { ButtonLink } from "./Button";
 import { ScrollMotion } from "./ScrollMotion";
 import { clinicInfo, hours, services } from "@/lib/clinic-data";
@@ -18,7 +16,7 @@ export function Header() {
   return <header className="site-header">
   <div className="site-nav shell">
    <Link to="/" className="brand" aria-label="Sharks Clinic home">
-    <img src={logo} alt=""/><span><strong>SHARKS</strong> Clinic</span>
+    <span><strong>SHARKS</strong> Clinic</span>
    </Link>
    <nav className="desktop-nav" aria-label="Main navigation">
     {links.map((link) => <NavLink key={link.to} to={link.to} end={link.to === "/"} className={({ isActive }) => (isActive ? "active" : undefined)}>{link.label}</NavLink>)}
@@ -48,7 +46,7 @@ export function Footer() {
   return <footer className="site-footer">
     <div className="shell footer-grid">
       <div className="footer-col footer-about">
-        <div className="footer-brand"><img src={logoFull} alt="SHARKS Clinic"/></div>
+        <div className="footer-brand"><strong>SHARKS</strong> Clinic</div>
         <p>Quality healthcare through innovation, compassion and excellence. Modern care for every stage of life, in the heart of Nairobi.</p>
         <div className="footer-emergency">
           <small>Emergency care, 24 / 7</small>
