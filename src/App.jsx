@@ -20,6 +20,7 @@ import Laboratory from "./pages/admin/Laboratory";
 import Prescriptions from "./pages/admin/Prescriptions";
 import Billing from "./pages/admin/Billing";
 import Reports from "./pages/admin/Reports";
+import AdminFeedback from "./pages/admin/Feedback";
 import Staff from "./pages/admin/Staff";
 import Settings from "./pages/admin/Settings";
 
@@ -67,6 +68,7 @@ export default function App() {
           <Route path="prescriptions" element={<Prescriptions />} />
           <Route path="billing" element={<Billing />} />
           <Route path="reports" element={<Reports />} />
+          <Route path="feedback" element={<AdminFeedback />} />
           <Route path="staff" element={<Staff />} />
           <Route path="settings" element={<Settings />} />
         </Route>

@@ -1,4 +1,4 @@
-import { BarChart3, CalendarClock, FlaskConical, IdCardLanyard, LayoutDashboard, Pill, ReceiptText, Settings, Stethoscope, Users, } from "lucide-react";
+import { BarChart3, CalendarClock, FlaskConical, IdCardLanyard, LayoutDashboard, MessageSquare, Pill, ReceiptText, Settings, Stethoscope, Users, } from "lucide-react";
 /** Single source of truth for the dashboard sidebar and page titles. */
 export const adminNavSections = [
   {
@@ -28,7 +28,10 @@ export const adminNavSections = [
   },
   {
     label: "Insights",
-    items: [{ to: "/admin/reports", label: "Reports", icon: BarChart3, description: "Clinic performance" }],
+    items: [
+      { to: "/admin/reports", label: "Reports", icon: BarChart3, description: "Clinic performance" },
+      { to: "/admin/feedback", label: "Feedback", icon: MessageSquare, description: "Patient comments" },
+    ],
   },
   {
     label: "Team",
