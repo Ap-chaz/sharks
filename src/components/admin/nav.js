@@ -39,7 +39,7 @@ export const adminNavSections = [
   },
   {
     label: "System",
-    items: [{ to: "/admin/settings", label: "Settings", icon: Settings, description: "Clinic profile" }],
+    items: [{ to: "/admin/settings", label: "Settings", icon: Settings, description: "Opening hours" }],
   },
 ];
 const allItems = adminNavSections.flatMap((section) => section.items);
