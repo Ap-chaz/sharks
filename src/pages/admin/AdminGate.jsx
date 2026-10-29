@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { LoginScreen } from "@/components/admin/LoginScreen";
 import { Toaster } from "@/components/admin/Toaster";
-import { getAuth } from "@/lib/clinic-db";
+import { api } from "@/lib/api";
+import { AdminUserContext } from "@/lib/admin-user";
 const pageMeta = [
   { title: "Staff Dashboard — SHARKS Clinic" },
   { name: "description", content: "SHARKS Clinic staff dashboard for appointments, patients, laboratory and billing." },
@@ -15,12 +16,12 @@ const pageMeta = [
  */
 export default function AdminRoute() {
   usePageMeta(pageMeta);
-  const [signedIn, setSignedIn] = useState(null);
+  const [user, setUser] = useState(undefined);
   useEffect(() => {
-    setSignedIn(getAuth().loggedIn);
+    api("/auth/me").then((data) => setUser(data.user), () => setUser(null));
   }, []);
   return (<>
-   {signedIn === null ? (<div className="admin-splash">Loading clinic dashboard…</div>) : signedIn ? (<AdminShell onSignOut={() => setSignedIn(false)}/>) : (<LoginScreen onSuccess={() => setSignedIn(true)}/>)}
+   {user === undefined ? (<div className="admin-splash">Loading clinic dashboard…</div>) : user ? (<AdminUserContext.Provider value={user}><AdminShell onSignOut={() => setUser(null)}/></AdminUserContext.Provider>) : (<LoginScreen onSuccess={() => api("/auth/me").then((data) => setUser(data.user), () => setUser(null))}/>)}
    <Toaster />
   </>);
 }

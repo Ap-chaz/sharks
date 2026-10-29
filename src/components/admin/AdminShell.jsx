@@ -1,14 +1,21 @@
 import { ExternalLink, LogOut, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
 import logo from "@/assets/clinic/logo-full.png";
-import { signOut } from "@/lib/clinic-db";
+import { api } from "@/lib/api";
+import { canOpen, homePathFor, roleLabel, useAdminUser, userInitial } from "@/lib/admin-user";
 import { adminNavSections, pageMetaFor } from "./nav";
 /** Sidebar shell that every dashboard view renders into. */
 export function AdminShell({ onSignOut }) {
   const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const meta = pageMetaFor(pathname);
+  const user = useAdminUser();
+  const role = user?.role;
+  const allowed = canOpen(role, pathname);
+  const visibleSections = adminNavSections
+    .map((section) => ({ ...section, items: section.items.filter((item) => canOpen(role, item.to)) }))
+    .filter((section) => section.items.length > 0);
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
@@ -36,9 +43,12 @@ export function AdminShell({ onSignOut }) {
       wide.removeEventListener("change", onWide);
     };
   }, [menuOpen]);
-  function handleSignOut() {
-    signOut();
+  async function handleSignOut() {
+    await api("/auth/logout", { method: "POST" }).catch(() => {});
     onSignOut();
+  }
+  if (role && pathname === "/admin" && !allowed && homePathFor(role) !== "/admin") {
+    return <Navigate to={homePathFor(role)} replace />;
   }
   return (<div className="admin-shell">
    <aside className={`admin-sidebar ${menuOpen ? "open" : ""}`}>
@@ -53,7 +63,7 @@ export function AdminShell({ onSignOut }) {
     </div>
 
     <nav className="admin-nav" aria-label="Dashboard navigation">
-     {adminNavSections.map((section) => (<div key={section.label} className="admin-nav-section">
+     {visibleSections.map((section) => (<div key={section.label} className="admin-nav-section">
        <span className="admin-nav-label">{section.label}</span>
        {section.items.map((item) => {
         const active = item.to === "/admin" ? pathname === "/admin" : pathname.startsWith(item.to);
@@ -91,14 +101,14 @@ export function AdminShell({ onSignOut }) {
      <div className="admin-topbar-actions">
       <span className="admin-user">
        <span className="admin-avatar" aria-hidden="true">
-        A
+        {userInitial(user)}
        </span>
-       <span className="admin-user-name">admin</span>
+       <span className="admin-user-name" title={roleLabel(role)}>{user?.fullName || user?.username}</span>
       </span>
      </div>
     </header>
     <main className="admin-main">
-     <Outlet />
+     {allowed ? <Outlet /> : <div className="admin-splash">You do not have access to this page.</div>}
     </main>
    </div>
 
