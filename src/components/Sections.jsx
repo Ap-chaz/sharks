@@ -136,11 +136,10 @@ export function DepartmentTiles() {
         <p>Tap any department to learn more or book a visit.</p>
       </div>
       <div className="dept-grid">
-        {services.map(({ title, category, Icon }, index) => (
+        {services.map(({ title, Icon }, index) => (
           <Link to="/services" className={`dept-tile tone-${deptTones[index % deptTones.length]}`} key={title}>
             <span className="dept-icon"><Icon size={24} /></span>
             <strong>{title}</strong>
-            <small>{category}</small>
           </Link>
         ))}
       </div>
