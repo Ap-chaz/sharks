@@ -13,6 +13,8 @@ const TONES = {
   "In lab": "warning",
   Requested: "warning",
   "In progress": "accent",
+  Issued: "accent",
+  Void: "danger",
   "Refill due": "warning",
   "On Call": "warning",
   "Awaiting sample": "warning",
