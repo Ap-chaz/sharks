@@ -17,6 +17,7 @@ import { labRouter } from './routes/lab.js';
 import { prescriptionsRouter } from './routes/prescriptions.js';
 import { publicFeedbackRouter, feedbackRouter } from './routes/feedback.js';
 import { doctorsRouter } from './routes/doctors.js';
+import { reportsRouter } from './routes/reports.js';
 
 function requireSameOrigin(req, res, next) {
   const unsafe = !['GET', 'HEAD', 'OPTIONS'].includes(req.method);
@@ -64,6 +65,7 @@ export function createApp() {
   app.use('/api/prescriptions', prescriptionsRouter);
   app.use('/api/feedback', feedbackRouter);
   app.use('/api/doctors', doctorsRouter);
+  app.use('/api/reports', reportsRouter);
 
   app.use(notFound);
   app.use(errorHandler);
