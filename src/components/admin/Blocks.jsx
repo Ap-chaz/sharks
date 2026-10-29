@@ -20,9 +20,9 @@ export function RowActions({ onEdit, onDelete }) {
    <button type="button" onClick={onEdit} aria-label="Edit record">
     <Pencil size={14}/>
    </button>
-   <button type="button" className="row-actions-danger" onClick={onDelete} aria-label="Delete record">
+   {onDelete && (<button type="button" className="row-actions-danger" onClick={onDelete} aria-label="Delete record">
     <Trash2 size={14}/>
-   </button>
+   </button>)}
   </div>);
 }
 export function BarRow({ label, value, max, display }) {

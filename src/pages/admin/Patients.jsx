@@ -8,6 +8,7 @@ import { RowActions } from "@/components/admin/Blocks";
 import { StatusPill } from "@/components/admin/StatusPill";
 import { showToast } from "@/lib/toast";
 import { usePatients } from "@/lib/use-patients";
+import { useAdminUser } from "@/lib/admin-user";
 
 const pageMeta = [
   { title: "Patients \u2014 SHARKS Clinic" },
@@ -51,6 +52,8 @@ export default function PatientsPage() {
   const [editing, setEditing] = useState(null);
   const [confirmRow, setConfirmRow] = useState(null);
   const [busy, setBusy] = useState(false);
+  const role = useAdminUser()?.role;
+  const canDeactivate = role === "administrator" || role === "doctor";
 
   async function saveForm(values) {
     if (busy) return;
@@ -95,7 +98,7 @@ export default function PatientsPage() {
       width: "92px",
       align: "end",
       render: (row) => (
-        <RowActions onEdit={() => setEditing(row)} onDelete={() => setConfirmRow(row)} />
+        <RowActions onEdit={() => setEditing(row)} onDelete={canDeactivate ? () => setConfirmRow(row) : undefined} />
       ),
     },
   ];
