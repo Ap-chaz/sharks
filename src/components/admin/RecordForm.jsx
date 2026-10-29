@@ -53,12 +53,12 @@ export function RecordForm({ fields, initial, submitLabel, onSubmit, onCancel, }
       const error = errors[field.name];
       return (<label key={field.name} className={`field record-field ${error ? "field-invalid" : ""} ${field.full ? "span-2" : ""}`}>
        <span>{field.label}</span>
-       {type === "select" ? (<select name={field.name} value={values[field.name] ?? ""} onChange={(event) => setValues({ ...values, [field.name]: event.target.value })}>
+       {type === "select" ? (<select name={field.name} disabled={field.disabled} value={values[field.name] ?? ""} onChange={(event) => setValues({ ...values, [field.name]: event.target.value })}>
          <option value="">Select {field.label.toLowerCase()}</option>
          {(field.options ?? []).map((option) => (<option key={option} value={option}>
            {option}
           </option>))}
-        </select>) : type === "textarea" ? (<textarea name={field.name} rows={4} value={values[field.name] ?? ""} placeholder={field.placeholder ?? ""} onChange={(event) => setValues({ ...values, [field.name]: event.target.value })}/>) : (<input name={field.name} type={type} value={values[field.name] ?? ""} placeholder={field.placeholder ?? ""} onChange={(event) => setValues({ ...values, [field.name]: event.target.value })}/>)}
+        </select>) : type === "textarea" ? (<textarea name={field.name} disabled={field.disabled} rows={4} value={values[field.name] ?? ""} placeholder={field.placeholder ?? ""} onChange={(event) => setValues({ ...values, [field.name]: event.target.value })}/>) : (<input name={field.name} disabled={field.disabled} type={type} value={values[field.name] ?? ""} placeholder={field.placeholder ?? ""} onChange={(event) => setValues({ ...values, [field.name]: event.target.value })}/>)}
        {error && <small>{error}</small>}
       </label>);
     })}

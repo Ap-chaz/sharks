@@ -103,6 +103,11 @@ export default function PatientsPage() {
     },
   ];
   const deactivating = confirmRow?.status === "Active";
+  const contactOnly = role === "receptionist" && editing !== "new" && editing !== null;
+  const CONTACT_FIELDS = ["phone", "email", "address"];
+  const formFields = contactOnly
+    ? FIELDS.map((f) => (CONTACT_FIELDS.includes(f.name) ? f : { ...f, disabled: true }))
+    : FIELDS;
 
   return (
     <div className="admin-page">
@@ -138,7 +143,7 @@ export default function PatientsPage() {
         onClose={() => setEditing(null)}
       >
         <RecordForm
-          fields={FIELDS}
+          fields={formFields}
           initial={editing === "new" || editing === null ? undefined : editing}
           submitLabel={editing === "new" ? "Add patient" : "Save changes"}
           onSubmit={saveForm}
