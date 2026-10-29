@@ -1,8 +1,9 @@
 import { usePageMeta } from "@/lib/use-page-meta";
-import { Check, X } from "lucide-react";
+import { Check, Plus, X } from "lucide-react";
 import { useState } from "react";
 import { DataTable, FilterSelect, useTable } from "@/components/admin/DataTable";
-import { ConfirmDialog } from "@/components/admin/Modal";
+import { ConfirmDialog, Modal } from "@/components/admin/Modal";
+import { NewAppointmentForm } from "@/components/admin/NewAppointmentForm";
 import { StatusPill } from "@/components/admin/StatusPill";
 import { showToast } from "@/lib/toast";
 import { shiftDate, todayInNairobi, useAppointments } from "@/lib/use-appointments";
@@ -18,7 +19,8 @@ const STATUSES = ["Pending", "Confirmed", "Completed", "Cancelled", "No show"];
 
 export default function AppointmentsPage() {
   usePageMeta(pageMeta);
-  const { view, setView, date, setDate, rows, loading, error, setStatus } = useAppointments();
+  const { view, setView, date, setDate, rows, loading, error, setStatus, reload } =
+    useAppointments();
   const table = useTable(rows, {
     searchKeys: SEARCH_KEYS,
     filterKey: "status",
@@ -26,6 +28,7 @@ export default function AppointmentsPage() {
     pageSize: 8,
   });
   const [cancelRow, setCancelRow] = useState(null);
+  const [creating, setCreating] = useState(false);
 
   async function confirmRow(row) {
     try {
@@ -130,6 +133,9 @@ export default function AppointmentsPage() {
           Requests from the public booking form arrive here as <strong>Pending</strong>. Confirm or
           cancel them, and use the day view to see a whole day.
         </p>
+        <button type="button" className="button button-accent" onClick={() => setCreating(true)}>
+          <Plus size={16} /> New appointment
+        </button>
       </div>
 
       <div
@@ -209,6 +215,18 @@ export default function AppointmentsPage() {
           />
         }
       />
+
+      <Modal open={creating} title="New appointment" onClose={() => setCreating(false)}>
+        <NewAppointmentForm
+          onCancel={() => setCreating(false)}
+          onSaved={(savedDate) => {
+            setCreating(false);
+            setView("day");
+            setDate(savedDate);
+            reload();
+          }}
+        />
+      </Modal>
 
       <ConfirmDialog
         open={cancelRow !== null}
