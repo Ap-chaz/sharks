@@ -521,7 +521,7 @@ h1, h2, h3 { font-weight: 400; margin: 0; }
   .band > .section { padding-block: 64px; }
   .band > .section.shell { width: min(100% - 40px, 680px); }
   .band + .section, .band + .split-section { padding-top: 56px; }
-  .cta-band { border-radius: 24px; margin-bottom: 48px; }
+  .cta-band { border-radius: 0; margin-bottom: 48px; }
   .band { border-radius: 24px; }
   .cta-inner { min-height: 420px; justify-content: center; align-items: start; flex-direction: column; }
   .service-grid, .value-grid, .quote-grid, .doctor-grid { grid-template-columns: 1fr; }
