@@ -6,7 +6,7 @@ import { clinicInfo } from "@/lib/clinic-data";
 
 const pageMeta = [
   { title: "Contact — SHARKS Clinic" },
-  { name: "description", content: "Call, email or visit SHARKS Clinic in Nairobi. Opening hours, location and WhatsApp." },
+  { name: "description", content: "Call, email or visit SHARKS Clinic in Kisii. Opening hours, location and WhatsApp." },
   { property: "og:title", content: "Contact — SHARKS Clinic" },
   { property: "og:type", content: "website" },
 ];
@@ -21,7 +21,7 @@ export default function ContactPage() {
   ];
   return (
     <>
-      <PageIntro eyebrow="Contact" regular="We're here," strong="whenever you need us." copy="Reach the team by phone, WhatsApp or email, or visit us in Nairobi." />
+      <PageIntro eyebrow="Contact" regular="We're here," strong="whenever you need us." copy="Reach the team by phone, WhatsApp or email, or visit us in Kisii." />
       <section className="shell contact-grid">
         {cards.map(({ Icon, title, value, href, tone }) => {
           const body = (

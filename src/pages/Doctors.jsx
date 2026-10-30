@@ -7,7 +7,7 @@ import { DepartmentTiles, DoctorCards, FaqList } from "@/components/Sections";
 
 const pageMeta = [
   { title: "Our Doctors — SHARKS Clinic" },
-  { name: "description", content: "Meet the SHARKS Clinic doctors and specialists caring for patients in Nairobi." },
+  { name: "description", content: "Meet the SHARKS Clinic doctors and specialists caring for patients in Kisii." },
   { property: "og:title", content: "Our Doctors — SHARKS Clinic" },
   { property: "og:type", content: "website" },
 ];

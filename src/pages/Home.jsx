@@ -7,10 +7,10 @@ import { CtaBand, Eyebrow, MixedHeading } from "@/components/PageParts";
 import { services } from "@/lib/clinic-data";
 import { DepartmentTiles, FaqList, HealthTips, HoursAndLocation, InsuranceStrip, PatientStories, ProcessSteps } from "@/components/Sections";
 const pageMeta = [
-  { title: "SHARKS Clinic — Modern Healthcare in Nairobi" },
-  { name: "description", content: "Compassionate, modern healthcare in Nairobi with trusted specialists, advanced facilities and 24/7 support." },
-  { property: "og:title", content: "SHARKS Clinic — Modern Healthcare in Nairobi" },
-  { property: "og:description", content: "Compassionate, modern healthcare in Nairobi with trusted specialists and advanced facilities." },
+  { title: "SHARKS Clinic — Modern Healthcare in Kisii" },
+  { name: "description", content: "Compassionate, modern healthcare in Kisii with trusted specialists, advanced facilities and 24/7 support." },
+  { property: "og:title", content: "SHARKS Clinic — Modern Healthcare in Kisii" },
+  { property: "og:description", content: "Compassionate, modern healthcare in Kisii with trusted specialists and advanced facilities." },
   { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" },
 ];
 export default function HomePage() {

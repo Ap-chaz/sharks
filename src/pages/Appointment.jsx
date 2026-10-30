@@ -11,7 +11,7 @@ const schema = z.object({
   date: z.string().min(1), time: z.string().min(1), reason: z.string().trim().min(5).max(360),
 });
 const pageMeta = [
-  { title: "Book an Appointment — SHARKS Clinic" }, { name: "description", content: "Request an appointment with SHARKS Clinic in Nairobi. Choose your department, date and preferred time." },
+  { title: "Book an Appointment — SHARKS Clinic" }, { name: "description", content: "Request an appointment with SHARKS Clinic in Kisii. Choose your department, date and preferred time." },
   { property: "og:title", content: "Book an Appointment — SHARKS Clinic" }, { property: "og:description", content: "Choose a convenient time to visit SHARKS Clinic and our team will confirm your appointment." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" },
 ];
 export default function AppointmentPage() {

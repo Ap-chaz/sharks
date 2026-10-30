@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { facilities, milestones } from "@/lib/clinic-data";
 import { InsuranceStrip } from "@/components/Sections";
 const pageMeta = [
-  { title: "About SHARKS Clinic — Care with Purpose" }, { name: "description", content: "Learn about SHARKS Clinic’s mission, values, clinical team and commitment to excellent healthcare in Nairobi." },
+  { title: "About SHARKS Clinic — Care with Purpose" }, { name: "description", content: "Learn about SHARKS Clinic’s mission, values, clinical team and commitment to excellent healthcare in Kisii." },
   { property: "og:title", content: "About SHARKS Clinic — Care with Purpose" }, { property: "og:description", content: "Meet the people and principles behind compassionate, modern healthcare at SHARKS Clinic." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" },
 ];
 export default function AboutPage() {
