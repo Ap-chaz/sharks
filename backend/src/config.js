@@ -13,6 +13,10 @@ const schema = z.object({
   MIGRATE_DB_PASSWORD: z.string().default(''),
   SESSION_SECRET: z.string().default(''),
   FRONTEND_ORIGIN: z.string().url().default('http://localhost:5173'),
+  HOST: z.string().min(1).default('127.0.0.1'),
+  TRUST_PROXY: z.coerce.number().int().min(0).max(10).default(0),
+  DB_SSL: z.enum(['true', 'false']).default('false'),
+  DB_SSL_CA_FILE: z.string().min(1).default('db/aiven-ca.pem'),
 });
 
 const parsed = schema.safeParse(process.env);

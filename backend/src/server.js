@@ -3,6 +3,6 @@ import { config } from './config.js';
 
 const app = createApp();
 
-app.listen(config.PORT, '127.0.0.1', () => {
-  console.log('SHARKS backend listening on http://127.0.0.1:' + config.PORT);
+app.listen(config.PORT, config.HOST, () => {
+  console.log('SHARKS backend listening on http://' + config.HOST + ':' + config.PORT);
 });

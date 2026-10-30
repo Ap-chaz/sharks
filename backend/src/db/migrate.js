@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import mysql from 'mysql2/promise';
 import { config } from '../config.js';
+import { dbSsl } from './ssl.js';
 
 const dir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'db', 'migrations');
 
@@ -18,6 +19,7 @@ async function main() {
     password: config.MIGRATE_DB_PASSWORD,
     database: config.DB_NAME,
     multipleStatements: true,
+    ssl: dbSsl(),
   });
 
   try {
