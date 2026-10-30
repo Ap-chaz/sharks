@@ -22,8 +22,8 @@ export const clinicInfo = {
 
 export const hours = [
   { day: "Monday – Friday", time: "08:00 – 17:00" },
-  { day: "Saturday", time: "09:00 – 13:00" },
-  { day: "Sunday", time: "Closed" },
+  { day: "Saturday", time: "Closed" },
+  { day: "Sunday", time: "09:00 – 13:00" },
   { day: "Emergency care", time: "Open 24 / 7", highlight: true },
 ];
 
