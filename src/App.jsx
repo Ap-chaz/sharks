@@ -22,6 +22,7 @@ import Billing from "./pages/admin/Billing";
 import Reports from "./pages/admin/Reports";
 import AdminFeedback from "./pages/admin/Feedback";
 import Staff from "./pages/admin/Staff";
+import AuditLog from "./pages/admin/AuditLog";
 import Settings from "./pages/admin/Settings";
 
 /** Public pages share the site header, footer and floating WhatsApp button. */
@@ -70,6 +71,7 @@ export default function App() {
           <Route path="reports" element={<Reports />} />
           <Route path="feedback" element={<AdminFeedback />} />
           <Route path="staff" element={<Staff />} />
+          <Route path="audit" element={<AuditLog />} />
           <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>

@@ -20,6 +20,7 @@ const PAGES = {
     "/admin/reports",
     "/admin/feedback",
     "/admin/staff",
+    "/admin/audit",
     "/admin/settings",
   ],
   doctor: [
