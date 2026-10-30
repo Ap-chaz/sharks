@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import stepA from "@/assets/clinic/step-book-online.jpg";
-import stepB from "@/assets/clinic/thumbnail-4.jpeg";
-import stepC from "@/assets/clinic/thumbnail-1.jpeg";
-import stepD from "@/assets/clinic/thumbnail-5.jpeg";
+import stepB from "@/assets/clinic/confirmation.jpg";
+import stepC from "@/assets/clinic/meet-your-doctor.jpeg";
+import stepD from "@/assets/clinic/follow-up.jpeg";
 import { ArrowRight, BadgeCheck, ChevronDown, Clock3, Lightbulb, Mail, MapPin, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ButtonLink } from "./Button";

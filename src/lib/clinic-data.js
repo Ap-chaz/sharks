@@ -16,8 +16,8 @@ export const clinicInfo = {
   phone: "+254 722 405 988",
   phoneHref: "tel:+254722405988",
   email: "hello@sharksclinic.com",
-  address: "Nairobi, Kenya",
-  mapQuery: "Nairobi, Kenya",
+  address: "Kisii, Kenya",
+  mapQuery: "Kisii, Kenya",
 };
 
 export const hours = [
