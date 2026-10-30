@@ -1,6 +1,4 @@
-import { ShieldAlert } from "lucide-react";
 import { useState } from "react";
-import logo from "@/assets/clinic/logo-full.png";
 import { api } from "@/lib/api";
 import { showToast } from "@/lib/toast";
 /** Simulated sign-in. It demonstrates the dashboard only — it is not security. */
@@ -36,7 +34,7 @@ export function LoginScreen({ onSuccess }) {
    <form className="login-card" onSubmit={submit} noValidate>
     <div className="login-brand">
      <div>
-      <img src={logo} alt="SHARKS Clinic"/>
+      <span><strong>SHARKS</strong> Clinic</span>
       <small>Management system</small>
      </div>
     </div>
@@ -63,11 +61,6 @@ export function LoginScreen({ onSuccess }) {
 
     <p className="login-hint">
      Sign in with your clinic staff account.
-    </p>
-    <p className="login-warning">
-     <ShieldAlert size={15}/>
-     This is a demo login. Anyone who knows the password can reach this dashboard, and records are stored only in
-     this browser.
     </p>
    </form>
    <a className="login-back" href="/">
