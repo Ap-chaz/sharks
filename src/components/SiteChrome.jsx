@@ -49,7 +49,7 @@ export function Footer() {
     <div className="shell footer-grid">
       <div className="footer-col footer-about">
         <div className="footer-brand"><strong>SHARKS</strong> Clinic</div>
-        <p>Quality healthcare through innovation, compassion and excellence. Modern care for every stage of life, in the heart of Nairobi.</p>
+        <p>Quality healthcare through innovation, compassion and excellence. Modern care for every stage of life, in the heart of Kisii.</p>
         <div className="footer-emergency">
           <small>Emergency care, 24 / 7</small>
           <a href={clinicInfo.phoneHref}><Phone size={18} /> {clinicInfo.phone}</a>

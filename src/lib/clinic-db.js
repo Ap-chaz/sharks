@@ -84,7 +84,7 @@ function seed() {
       tagline: "Your health. Our priority.",
       phone: "+254 722 405 988",
       email: "hello@sharksclinic.com",
-      address: "Nairobi, Kenya",
+      address: "Kisii, Kenya",
       hours: "Mon – Sat, 8:00 AM – 6:00 PM",
       currency: "KES",
       appointmentSlotMinutes: 30,
