@@ -1,7 +1,7 @@
 import { usePageMeta } from "@/lib/use-page-meta";
 import { Link } from "react-router-dom";
 import { ArrowRight, Check } from "lucide-react";
-import careImage from "@/assets/clinic/thumbnail-4.jpeg";
+import careImage from "@/assets/clinic/why-choose-us.jpeg";
 import { ButtonLink } from "@/components/Button";
 import { CtaBand, Eyebrow, MixedHeading } from "@/components/PageParts";
 import { services } from "@/lib/clinic-data";
