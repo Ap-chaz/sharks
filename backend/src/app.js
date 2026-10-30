@@ -33,6 +33,7 @@ export function createApp() {
   const app = express();
 
   app.disable('x-powered-by');
+  app.set('trust proxy', config.TRUST_PROXY);
   app.use(requestLogger);
   app.use(helmet());
   app.use(cors({ origin: config.FRONTEND_ORIGIN, credentials: true }));
