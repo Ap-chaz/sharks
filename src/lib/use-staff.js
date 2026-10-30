@@ -8,6 +8,21 @@ const ROLE_LABEL = {
   lab_technician: "Lab technician",
 };
 
+const nairobiDay = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Africa/Nairobi",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
+/** A UTC timestamp from the server -> Nairobi date as YYYY-MM-DD. */
+function toDay(value) {
+  let text = String(value);
+  if (/^\d{4}-\d{2}-\d{2} /.test(text)) text = text.replace(" ", "T") + "Z";
+  const date = new Date(text);
+  return Number.isNaN(date.getTime()) ? text.slice(0, 10) : nairobiDay.format(date);
+}
+
 /** Backend staff member -> row shown in the table. */
 export function toRow(s) {
   return {
@@ -18,7 +33,7 @@ export function toRow(s) {
     rawRole: s.role,
     isActive: s.isActive,
     status: s.isActive ? "Active" : "Deactivated",
-    lastLogin: s.lastLoginAt ? String(s.lastLoginAt).slice(0, 10) : "Never",
+    lastLogin: s.lastLoginAt ? toDay(s.lastLoginAt) : "Never",
   };
 }
 
