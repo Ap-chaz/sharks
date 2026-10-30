@@ -23,6 +23,17 @@ async function getHours() {
   return typeof v === 'string' ? JSON.parse(v) : v;
 }
 
+// Public, read-only: the clinic opening hours (days and times only, nothing private).
+publicRouter.get('/opening-hours', async (req, res, next) => {
+  try {
+    const hours = await getHours();
+    if (!hours) return res.status(404).json({ error: 'Not found' });
+    res.json({ timezone: 'Africa/Nairobi', slotMinutes: hours.slotMinutes, days: hours.days });
+  } catch (err) {
+    next(err);
+  }
+});
+
 publicRouter.get('/slots', async (req, res, next) => {
   try {
     const date = String(req.query.date || '');

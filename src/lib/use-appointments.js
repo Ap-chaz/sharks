@@ -1,9 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
 
-// doctors.id 1 is the owner; id 2 is the placeholder assistant.
-const DOCTORS = { 1: "Dr Nyameino", 2: "Assistant Doctor" };
-
 const STATUS_LABEL = {
   pending: "Pending",
   confirmed: "Confirmed",
@@ -55,7 +52,7 @@ export function toRow(a) {
     email,
     department,
     reason,
-    doctor: DOCTORS[a.doctorId] || "Doctor #" + a.doctorId,
+    doctor: a.doctorName || "Doctor #" + a.doctorId,
     date: a.date,
     time: time12(a.time),
     sortKey: a.date + " " + a.time,

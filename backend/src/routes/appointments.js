@@ -58,6 +58,7 @@ function toDto(r) {
     patientName: r.patientName || r.requesterName || null,
     phone: r.patientPhone || r.requesterPhone || null,
     doctorId: r.doctorId,
+    doctorName: r.doctorName || null,
     date: local.date,
     time: local.time,
     status: r.status,
@@ -67,8 +68,8 @@ function toDto(r) {
 
 const LIST_SQL =
   'SELECT a.id, a.patient_id AS patientId, p.full_name AS patientName, p.phone AS patientPhone, a.requester_name AS requesterName, a.requester_phone AS requesterPhone, ' +
-  "a.doctor_id AS doctorId, CONCAT(DATE_FORMAT(a.starts_at, '%Y-%m-%dT%H:%i:%s'), 'Z') AS startsAt, a.status, a.notes " +
-  'FROM appointments a LEFT JOIN patients p ON p.id = a.patient_id';
+  "a.doctor_id AS doctorId, d.full_name AS doctorName, CONCAT(DATE_FORMAT(a.starts_at, '%Y-%m-%dT%H:%i:%s'), 'Z') AS startsAt, a.status, a.notes " +
+  'FROM appointments a LEFT JOIN patients p ON p.id = a.patient_id LEFT JOIN doctors d ON d.id = a.doctor_id';
 
 appointmentsRouter.get('/', async (req, res, next) => {
   try {

@@ -3,7 +3,8 @@ import { ArrowUpRight, Clock3, Mail, MapPin, Menu, MessageCircle, Phone, X } fro
 import { useState } from "react";
 import { ButtonLink } from "./Button";
 import { ScrollMotion } from "./ScrollMotion";
-import { clinicInfo, hours, services } from "@/lib/clinic-data";
+import { clinicInfo, services } from "@/lib/clinic-data";
+import { useHoursRows } from "@/lib/use-opening-hours";
 const links = [
   { to: "/", label: "Home" },
   { to: "/about", label: "About" },
@@ -34,6 +35,7 @@ export function Header() {
  </header>;
 }
 export function Footer() {
+  const hoursRows = useHoursRows();
   const explore = [
     { to: "/", label: "Home" },
     { to: "/about", label: "About us" },
@@ -73,10 +75,10 @@ export function Footer() {
           <li><Phone size={16} /><a href={clinicInfo.phoneHref}>{clinicInfo.phone}</a></li>
         </ul>
         <h3 className="footer-subhead"><Clock3 size={14} /> Opening hours</h3>
-        <ul className="footer-hours">{hours.map((row) => <li key={row.day}><span>{row.day}</span><strong>{row.time}</strong></li>)}</ul>
+        <ul className="footer-hours">{hoursRows.map((row) => <li key={row.day}><span>{row.day}</span><strong>{row.time}</strong></li>)}</ul>
       </div>
     </div>
-    <div className="shell footer-bottom"><span>© 2026 SHARKS Clinic. All rights reserved.</span><div className="footer-links"><Link to="/feedback">Share feedback <ArrowUpRight size={14} /></Link><Link to="/admin">Staff sign in</Link></div></div>
+    <div className="shell footer-bottom"><span>© 2026 SHARKS Clinic. All rights reserved.</span><div className="footer-links"><Link to="/feedback">Share feedback <ArrowUpRight size={14} /></Link></div></div>
   </footer>;
 }
 

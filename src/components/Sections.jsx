@@ -7,7 +7,8 @@ import { ArrowRight, BadgeCheck, ChevronDown, Clock3, Lightbulb, Mail, MapPin, P
 import { Link } from "react-router-dom";
 import { ButtonLink } from "./Button";
 import { Eyebrow, MixedHeading } from "./PageParts";
-import { clinicInfo, doctors, faqs, healthTips, hours, insurers, processSteps, services } from "@/lib/clinic-data";
+import { clinicInfo, doctors, faqs, healthTips, insurers, processSteps, services } from "@/lib/clinic-data";
+import { useHoursRows } from "@/lib/use-opening-hours";
 
 /** Pinned scroll-story: the stage stays put while the image and active step change with scroll. */
 const stepImages = [stepA, stepB, stepC, stepD];
@@ -217,13 +218,14 @@ export function FaqList() {
 
 /** Opening hours beside a map. */
 export function HoursAndLocation() {
+  const hoursRows = useHoursRows();
   return (
     <section className="section shell hours-wrap">
       <div className="hours-card">
         <Eyebrow>Visit us</Eyebrow>
         <h2 className="hours-title"><Clock3 size={22} /> Opening hours</h2>
         <ul className="hours-list">
-          {hours.map((row) => (
+          {hoursRows.map((row) => (
             <li key={row.day} className={row.highlight ? "hours-highlight" : undefined}>
               <span>{row.day}</span>
               <strong>{row.time}</strong>
